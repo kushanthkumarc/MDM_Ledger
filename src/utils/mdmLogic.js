@@ -1,5 +1,3 @@
-import { format, startOfMonth, endOfMonth, eachDayOfInterval, getDay } from 'date-fns';
-
 export const ITEM_RATES = {
   rice: { primary: 0.100, middle: 0.150 },
   dhall: { rate: 0.015 } 
@@ -14,10 +12,12 @@ export const calculateInventory = (daysData, openingRice, openingDhall) => {
     const m = parseFloat(day.mStr) || 0;
     const total = p + m;
 
+    // Rice is daily
     const rUsed = (p * ITEM_RATES.rice.primary) + (m * ITEM_RATES.rice.middle);
-    const dUsed = total * ITEM_RATES.dhall.rate;
-    
     rBal -= rUsed;
+
+    // Dhall is conditional based on the toggle
+    const dUsed = day.dhallActive ? (total * ITEM_RATES.dhall.rate) : 0;
     dBal -= dUsed;
 
     return {

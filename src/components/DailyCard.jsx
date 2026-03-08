@@ -5,11 +5,15 @@ export default function DailyCard({ day, onUpdate, activeItems, isFocus }) {
   return (
     <div className={`bg-white p-4 rounded-xl shadow-sm border-2 transition-all ${isFocus ? 'border-blue-500 ring-4 ring-blue-50' : 'border-transparent'}`}>
       <div className="flex justify-between items-center mb-3">
-        <h3 className={`font-bold ${isFocus ? 'text-blue-700' : 'text-slate-600'}`}>{day.display}</h3>
-        <div className="flex gap-2 text-[9px] font-bold">
-          {activeItems.rice && <span className="text-blue-600 bg-blue-50 px-2 py-1 rounded">R: {day.riceRemaining}</span>}
-          {activeItems.dhall && <span className="text-amber-600 bg-amber-50 px-2 py-1 rounded">D: {day.dhallRemaining}</span>}
-        </div>
+        <h3 className="font-bold text-slate-700">{day.display}</h3>
+        {activeItems.dhall && (
+          <button 
+            onClick={() => onUpdate(day.date, 'dhallActive', !day.dhallActive)}
+            className={`text-[10px] px-3 py-1 rounded-full font-bold transition-all ${day.dhallActive ? 'bg-amber-500 text-white shadow-md' : 'bg-slate-100 text-slate-400'}`}
+          >
+            {day.dhallActive ? 'Dhall Served' : 'No Dhall'}
+          </button>
+        )}
       </div>
       <div className="grid grid-cols-2 gap-3">
         <div className="relative">
