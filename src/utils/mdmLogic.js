@@ -3,20 +3,16 @@ export const ITEM_RATES = {
   dhall: { rate: 0.015 },                 
   oil: { rate: 0.003 },                   
   salt: { rate: 0.0019 },                 
-  // Monetary Items (Converted from Paise to Rupees: rate / 100)
-  veg: { primary: 1.48, middle: 2.18 }, 
-  wood: { rate: 1.25 },                   
-  maligai: { rate: 0.45 }                 
+  veg: { primary: 0.0148, middle: 0.0118 }, 
+  wood: { rate: 0.0125 },                   
+  maligai: { rate: 0.0045 }                 
 };
 
 export const calculateInventory = (daysData, stocks) => {
   let bal = {
-    r: parseFloat(stocks.rice) || 0,
-    d: parseFloat(stocks.dhall) || 0,
-    o: parseFloat(stocks.oil) || 0,
-    s: parseFloat(stocks.salt) || 0,
-    v: parseFloat(stocks.veg) || 0,
-    w: parseFloat(stocks.wood) || 0,
+    r: parseFloat(stocks.rice) || 0, d: parseFloat(stocks.dhall) || 0,
+    o: parseFloat(stocks.oil) || 0, s: parseFloat(stocks.salt) || 0,
+    v: parseFloat(stocks.veg) || 0, w: parseFloat(stocks.wood) || 0,
     m: parseFloat(stocks.maligai) || 0
   };
 
@@ -25,7 +21,6 @@ export const calculateInventory = (daysData, stocks) => {
     const m = parseFloat(day.mStr) || 0;
     const total = p + m;
 
-    // Daily Usage Calculations
     const rU = (p * ITEM_RATES.rice.primary) + (m * ITEM_RATES.rice.middle);
     const dU = day.dhallActive ? (total * ITEM_RATES.dhall.rate) : 0;
     const oU = total * ITEM_RATES.oil.rate;
@@ -34,7 +29,6 @@ export const calculateInventory = (daysData, stocks) => {
     const wU = total * ITEM_RATES.wood.rate;
     const mU = total * ITEM_RATES.maligai.rate;
 
-    // Update Running Balances
     bal.r -= rU; bal.d -= dU; bal.o -= oU; bal.s -= sU;
     bal.v -= vU; bal.w -= wU; bal.m -= mU;
 
