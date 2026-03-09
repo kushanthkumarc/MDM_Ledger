@@ -3,9 +3,9 @@ export const ITEM_RATES = {
   dhall: { rate: 0.015 },                 
   oil: { rate: 0.003 },                   
   salt: { rate: 0.0019 },                 
-  veg: { primary: 0.0148, middle: 0.0118 }, 
-  wood: { rate: 0.0125 },                   
-  maligai: { rate: 0.0045 }                 
+  veg: { primary: 1.48, middle: 2.48 }, 
+  wood: { rate: 1.25 },                   
+  maligai: { rate: 0.45 }                 
 };
 
 export const calculateInventory = (daysData, stocks) => {
