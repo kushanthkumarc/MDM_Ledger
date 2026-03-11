@@ -9,6 +9,7 @@ export const ITEM_RATES = {
 };
 
 export const calculateInventory = (daysData, stocks) => {
+  // Start with the Opening Balances provided in the top panel
   let bal = {
     r: parseFloat(stocks.rice) || 0, 
     d: parseFloat(stocks.dhall) || 0,
@@ -24,10 +25,22 @@ export const calculateInventory = (daysData, stocks) => {
     const m = parseFloat(day.mStr) || 0;
     const total = p + m;
 
-    // Default usage to 0
+    // 1. ADD NEW STOCK (ARRIVALS) FIRST
+    // This happens even if total students is 0 (delivery can happen on holidays)
+    if (day.arrivals) {
+      bal.r += parseFloat(day.arrivals.rice) || 0;
+      bal.d += parseFloat(day.arrivals.dhall) || 0;
+      bal.o += parseFloat(day.arrivals.oil) || 0;
+      bal.s += parseFloat(day.arrivals.salt) || 0;
+      bal.v += parseFloat(day.arrivals.veg) || 0;
+      bal.w += parseFloat(day.arrivals.wood) || 0;
+      bal.m += parseFloat(day.arrivals.maligai) || 0;
+    }
+
+    // 2. CALCULATE USAGE
     let rU = 0, dU = 0, oU = 0, sU = 0, vU = 0, wU = 0, mU = 0;
 
-    // Only perform subtraction if students were present (Total > 0)
+    // The Gatekeeper Rule: Only subtract if students were present
     if (total > 0) {
       rU = (p * ITEM_RATES.rice.primary) + (m * ITEM_RATES.rice.middle);
       dU = day.dhallActive ? (total * ITEM_RATES.dhall.rate) : 0;
@@ -37,11 +50,12 @@ export const calculateInventory = (daysData, stocks) => {
       wU = total * ITEM_RATES.wood.rate;
       mU = total * ITEM_RATES.maligai.rate;
       
-      // Update the running balance
+      // Update the running balance by subtracting usage
       bal.r -= rU; bal.d -= dU; bal.o -= oU; bal.s -= sU;
       bal.v -= vU; bal.w -= wU; bal.m -= mU;
     }
 
+    // 3. RETURN DATA FOR THE DAY
     return {
       ...day,
       totalStudents: total,
